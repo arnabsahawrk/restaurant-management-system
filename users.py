@@ -1,7 +1,3 @@
-"""
-3 types of users: admin, employee, customer
-"""
-
 from abc import ABC
 
 
@@ -11,6 +7,33 @@ class User(ABC):
         self.phone = phone
         self.email = email
         self.address = address
+
+
+class Customer(User):
+    def __init__(self, name, phone, email, address) -> None:
+        super().__init__(name, phone, email, address)
+        self.cart = Order()
+
+    def view_menu(self, restaurant):
+        restaurant.menu.show_menu()
+
+    def add_to_cart(self, restaurant, item_name):
+        item = restaurant.menu.find_item(item_name)
+
+        if item:
+            pass
+        else:
+            print("Item not found.")
+
+    def view_cart(self):
+        print("\t**********************\t")
+        print("\t\tORDER\t\t")
+        print("\t**********************\t")
+        print("Name\t\tPrice\t\tQuantity\n")
+        for item, quantity in self.cart.items.items():
+            print(f"{item.name}\t\t{item.price}\t\t{quantity}")
+
+        print(f"\nTotal Price: {item.total_price}")
 
 
 class Employee(User):
@@ -107,6 +130,29 @@ class FoodItem:
         self.name = name
         self.price = price
         self.quantity = quantity
+
+
+class Order:
+    def __init__(self) -> None:
+        self.items = {}
+
+    def add_item(self, item):
+        if item in self.items:
+            self.items[item] += item.quantity
+        else:
+            self.items[item] = item.quantity
+
+    def remove(self, item):
+        if item in self.items:
+            del self.items[item]
+        else:
+            pass
+
+    def total_price(self):
+        return sum(item.price * q for item, q in self.items.items())
+
+    def clear(self):
+        self.cart = {}
 
 
 ad = Admin("Arnab", 1517824769, "arnabsahawrk@gmail.com", "Dhaka")
