@@ -29,33 +29,29 @@ class Employee(User):
         self.designation = designation
         self.__salary = salary
 
+    @property
+    def salary(self):
+        return self.__salary
+
 
 class Admin(User):
     def __init__(self, name, phone, email, address) -> None:
         super().__init__(name, phone, email, address)
+
+    def add_employee(self, restaurant, employee):
+        restaurant.add_employee(employee)
+
+    def view_employee(self, restaurant):
+        restaurant.view_employee()
+
+
+class Restaurant:
+    def __init__(self, name) -> None:
+        self.name = name
         self.employees = []
 
-    def add_employee(
-        self,
-        name,
-        phone,
-        email,
-        address,
-        age,
-        designation,
-        salary,
-    ):
-        employee = Employee(
-            name,
-            phone,
-            email,
-            address,
-            age,
-            designation,
-            salary,
-        )
+    def add_employee(self, employee):
         self.employees.append(employee)
-        print(f"{name} is added!!")
 
     def view_employee(self):
         print("Employee List!!")
@@ -65,3 +61,44 @@ class Admin(User):
                 f"Address: {emp.address}, Age: {emp.age}, "
                 f"Designation: {emp.designation}, Salary: {emp.salary}"
             )
+
+
+class Menu:
+    def __init__(self) -> None:
+        self.items = []
+
+    def add_menu_items(self, item):
+        self.items.append(item)
+
+    def find_item(self, item_name):
+        for item in self.items:
+            if item.name.lower() == item_name.lower():
+                return item
+        return None
+
+    def remove_item(self, item_name):
+        item = self.find_item(item_name)
+
+        if item:
+            self.items.remove(item)
+            print("Item deleted")
+        else:
+            print("Item no found")
+
+
+ad = Admin("Arnab", 1517824769, "arnabsahawrk@gmail.com", "Dhaka")
+# ad.add_employee("Ridom", 123, "ridom.com", "Noakhali", 24, "Editor", 20000)
+res = Restaurant("Khana-Dana")
+ad.add_employee(
+    res,
+    Employee(
+        "Ridom",
+        123,
+        "ridom.com",
+        "Noakhali",
+        24,
+        "Editor",
+        20000,
+    ),
+)
+ad.view_employee(res)
