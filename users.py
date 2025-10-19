@@ -44,22 +44,30 @@ class Admin(User):
     def view_employee(self, restaurant):
         restaurant.view_employee()
 
+    def add_menu_item(self, restaurant, item):
+        restaurant.menu.add_menu_item(item)
+
+    def delete_item(self, restaurant, item):
+        restaurant.menu.remove_item(item)
+
 
 class Restaurant:
     def __init__(self, name) -> None:
         self.name = name
         self.employees = []
+        self.menu = Menu()
 
     def add_employee(self, employee):
         self.employees.append(employee)
 
     def view_employee(self):
-        print("Employee List!!")
+        print("\t\tEmployee List\t\t")
+        print("-----------------------------------------------")
         for emp in self.employees:
             print(
-                f"Name: {emp.name}, Phone: {emp.phone}, Email: {emp.email}, "
-                f"Address: {emp.address}, Age: {emp.age}, "
-                f"Designation: {emp.designation}, Salary: {emp.salary}"
+                f"Name: {emp.name}, Phone: {emp.phone}, Email: {emp.email}\n\n"
+                f"Address: {emp.address}, Age: {emp.age}\n\n"
+                f"Designation: {emp.designation}, Salary: {emp.salary}\n\n"
             )
 
 
@@ -85,6 +93,21 @@ class Menu:
         else:
             print("Item no found")
 
+    def show_menu(self):
+        print("\t**********************\t")
+        print("\t\tMENU\t\t")
+        print("\t**********************\t")
+        print("Name\t\tPrice\t\tQuantity\n")
+        for item in self.items:
+            print(f"{item.name}\t\t{item.price}\t\t{item.quantity}")
+
+
+class FoodItem:
+    def __init__(self, name, price, quantity) -> None:
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
 
 ad = Admin("Arnab", 1517824769, "arnabsahawrk@gmail.com", "Dhaka")
 # ad.add_employee("Ridom", 123, "ridom.com", "Noakhali", 24, "Editor", 20000)
@@ -102,3 +125,8 @@ ad.add_employee(
     ),
 )
 ad.view_employee(res)
+
+mn = Menu()
+item = FoodItem("Kacci", 300, 100)
+mn.add_menu_items(item)
+mn.show_menu()
