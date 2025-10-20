@@ -19,4 +19,4 @@ class Order:
         return sum(item.price * q for item, q in self.items.items())
 
     def clear(self):
-        self.cart = {}
+        self.items = {}

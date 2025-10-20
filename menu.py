@@ -21,11 +21,14 @@ class Menu:
             print("Item no found")
 
     def show_menu(self):
-        print("\t**********************\t")
-        print("\t\tMENU\t\t")
-        print("\t**********************\t")
-        for item in self.items:
-            print(
-                f"Name: {item.name}\tPrice: {item.price}\t",
-                f"Quantity: {item.quantity}",
-            )
+        if len(self.items):
+            print("\t**********************\t")
+            print("\t\tMENU\t\t")
+            print("\t**********************\t")
+            for item in self.items:
+                print(
+                    f"Name: {item.name}\tPrice: {item.price}\t",
+                    f"Quantity: {item.quantity}",
+                )
+        else:
+            print("Menu isn't available yet.")

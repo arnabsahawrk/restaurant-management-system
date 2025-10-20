@@ -25,6 +25,9 @@ class Admin(User):
     def add_new_item(self, restaurant, item):
         restaurant.menu.add_menu_items(item)
 
+    def view_menu(self, restaurant):
+        restaurant.menu.show_menu()
+
     def delete_item(self, restaurant, item):
         restaurant.menu.remove_item(item)
 
@@ -84,5 +87,7 @@ class Customer(User):
             print(f"Total Price: {self.cart.total_price}")
         else:
             print("Not added any food yet.")
-            print("Not added any food yet.")
-            print("Not added any food yet.")
+
+    def pay_bill(self):
+        print(f"Total {self.cart.total_price} taka paid successfully.")
+        self.cart.clear()
