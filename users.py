@@ -1,5 +1,8 @@
 from abc import ABC
 
+from food_item import FoodItem
+from orders import Order
+
 
 class User(ABC):
     def __init__(self, name, phone, email, address) -> None:
@@ -9,31 +12,21 @@ class User(ABC):
         self.address = address
 
 
-class Customer(User):
+class Admin(User):
     def __init__(self, name, phone, email, address) -> None:
         super().__init__(name, phone, email, address)
-        self.cart = Order()
 
-    def view_menu(self, restaurant):
-        restaurant.menu.show_menu()
+    def add_employee(self, restaurant, employee):
+        restaurant.add_employee(employee)
 
-    def add_to_cart(self, restaurant, item_name):
-        item = restaurant.menu.find_item(item_name)
+    def view_employee(self, restaurant):
+        restaurant.view_employee()
 
-        if item:
-            pass
-        else:
-            print("Item not found.")
+    def add_new_item(self, restaurant, item):
+        restaurant.menu.add_menu_items(item)
 
-    def view_cart(self):
-        print("\t**********************\t")
-        print("\t\tORDER\t\t")
-        print("\t**********************\t")
-        print("Name\t\tPrice\t\tQuantity\n")
-        for item, quantity in self.cart.items.items():
-            print(f"{item.name}\t\t{item.price}\t\t{quantity}")
-
-        print(f"\nTotal Price: {item.total_price}")
+    def delete_item(self, restaurant, item):
+        restaurant.menu.remove_item(item)
 
 
 class Employee(User):
@@ -57,122 +50,39 @@ class Employee(User):
         return self.__salary
 
 
-class Admin(User):
+class Customer(User):
     def __init__(self, name, phone, email, address) -> None:
         super().__init__(name, phone, email, address)
+        self.cart = Order()
 
-    def add_employee(self, restaurant, employee):
-        restaurant.add_employee(employee)
+    def view_menu(self, restaurant):
+        restaurant.menu.show_menu()
 
-    def view_employee(self, restaurant):
-        restaurant.view_employee()
-
-    def add_menu_item(self, restaurant, item):
-        restaurant.menu.add_menu_item(item)
-
-    def delete_item(self, restaurant, item):
-        restaurant.menu.remove_item(item)
-
-
-class Restaurant:
-    def __init__(self, name) -> None:
-        self.name = name
-        self.employees = []
-        self.menu = Menu()
-
-    def add_employee(self, employee):
-        self.employees.append(employee)
-
-    def view_employee(self):
-        print("\t\tEmployee List\t\t")
-        print("-----------------------------------------------")
-        for emp in self.employees:
-            print(
-                f"Name: {emp.name}, Phone: {emp.phone}, Email: {emp.email}\n\n"
-                f"Address: {emp.address}, Age: {emp.age}\n\n"
-                f"Designation: {emp.designation}, Salary: {emp.salary}\n\n"
-            )
-
-
-class Menu:
-    def __init__(self) -> None:
-        self.items = []
-
-    def add_menu_items(self, item):
-        self.items.append(item)
-
-    def find_item(self, item_name):
-        for item in self.items:
-            if item.name.lower() == item_name.lower():
-                return item
-        return None
-
-    def remove_item(self, item_name):
-        item = self.find_item(item_name)
+    def add_to_cart(self, restaurant, item_name, quantity):
+        item = restaurant.menu.find_item(item_name)
 
         if item:
-            self.items.remove(item)
-            print("Item deleted")
+            if item.quantity >= quantity:
+                self.cart.add_item(FoodItem(item.name, item.price, quantity))
+                print("Item added.")
+            else:
+                print("Item quantity is not available.")
         else:
-            print("Item no found")
+            print("Item not found.")
 
-    def show_menu(self):
-        print("\t**********************\t")
-        print("\t\tMENU\t\t")
-        print("\t**********************\t")
-        print("Name\t\tPrice\t\tQuantity\n")
-        for item in self.items:
-            print(f"{item.name}\t\t{item.price}\t\t{item.quantity}")
+    def view_cart(self):
+        if len(self.cart.items):
+            print("\t**********************\t")
+            print("\t\tORDER\t\t")
+            print("\t**********************\t")
+            for item, quantity in self.cart.items.items():
+                print(
+                    f"Name: {item.name}\tPrice: {item.price}\t",
+                    f"Quantity: {quantity}",
+                )
 
-
-class FoodItem:
-    def __init__(self, name, price, quantity) -> None:
-        self.name = name
-        self.price = price
-        self.quantity = quantity
-
-
-class Order:
-    def __init__(self) -> None:
-        self.items = {}
-
-    def add_item(self, item):
-        if item in self.items:
-            self.items[item] += item.quantity
+            print(f"Total Price: {self.cart.total_price}")
         else:
-            self.items[item] = item.quantity
-
-    def remove(self, item):
-        if item in self.items:
-            del self.items[item]
-        else:
-            pass
-
-    def total_price(self):
-        return sum(item.price * q for item, q in self.items.items())
-
-    def clear(self):
-        self.cart = {}
-
-
-ad = Admin("Arnab", 1517824769, "arnabsahawrk@gmail.com", "Dhaka")
-# ad.add_employee("Ridom", 123, "ridom.com", "Noakhali", 24, "Editor", 20000)
-res = Restaurant("Khana-Dana")
-ad.add_employee(
-    res,
-    Employee(
-        "Ridom",
-        123,
-        "ridom.com",
-        "Noakhali",
-        24,
-        "Editor",
-        20000,
-    ),
-)
-ad.view_employee(res)
-
-mn = Menu()
-item = FoodItem("Kacci", 300, 100)
-mn.add_menu_items(item)
-mn.show_menu()
+            print("Not added any food yet.")
+            print("Not added any food yet.")
+            print("Not added any food yet.")
